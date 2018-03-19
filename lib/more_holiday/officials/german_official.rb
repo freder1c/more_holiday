@@ -1,4 +1,4 @@
-module SmartHoliday
+module MoreHoliday
   module Officials
     class German
       attr_reader :state

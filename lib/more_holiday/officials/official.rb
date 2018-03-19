@@ -1,6 +1,6 @@
-require "smart_holiday/officials/german_official"
+require "more_holiday/officials/german_official"
 
-module SmartHoliday
+module MoreHoliday
   class Official
     attr_reader :state
 

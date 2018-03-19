@@ -1,6 +1,6 @@
-require "smart_holiday/officials/official"
+require "more_holiday/officials/official"
 
-module SmartHoliday
+module MoreHoliday
   class Calculate
     attr_reader :state, :days_count, :config, :officials
 

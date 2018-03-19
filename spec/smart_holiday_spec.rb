@@ -1,5 +1,5 @@
-RSpec.describe SmartHoliday do
+RSpec.describe MoreHoliday do
   it "has a version number" do
-    expect(SmartHoliday::VERSION).not_to be nil
+    expect(MoreHoliday::VERSION).not_to be nil
   end
 end

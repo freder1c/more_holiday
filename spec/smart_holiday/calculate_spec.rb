@@ -1,4 +1,4 @@
-RSpec.describe SmartHoliday::Calculate do
+RSpec.describe MoreHoliday::Calculate do
   describe "#holidays" do
     subject { described_class.new(state: "Berlin", days_count: 24).holidays }
 
