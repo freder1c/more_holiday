@@ -1,29 +1,46 @@
-require "more_holiday/officials/official"
+require "more_holiday/connector"
+require "more_holiday/reader"
 
 module MoreHoliday
   class Calculate
-    attr_reader :state, :days_count, :config, :officials
+    attr_reader :state, :available_days, :officials_file_path, :year
 
-    def initialize state:, days_count:, config: {}
+    def initialize state:, available_days: 0, officials_file_path: nil, year: Date.today.year
       @state = state
-      @days_count = days_count
-      @config = config
+      @available_days = available_days
+      @officials_file_path = officials_file_path
+      @year = year
     end
 
     def holidays
-      get_officials
-
       {
         holidays: [],
-        officials: officials
+        officials: officials,
+        info: {
+          state: state,
+          officials_source: officials_source
+        }
       }
     end
 
     private
 
-    def get_officials
-      @officials ||= Official.new(state: state).list
+    def connector
+      @connector ||= Connector.new(state)
     end
 
+    def officials
+      @officials ||=
+        if officials_file_path.nil?
+          connector.list
+        else
+          Reader.new(officials_file_path, for_year: year).list
+        end
+    end
+
+    def officials_source
+      return "file" unless officials_file_path.nil?
+      connector.source
+    end
   end
 end
