@@ -2,7 +2,7 @@ RSpec.describe MoreHoliday::Readers::ICal do
   let(:ical_path) { File.join("spec", "fixtures", "reader", "ical.ics") }
 
   describe "#list" do
-    subject { described_class.new(ical_path).serialize }
+    subject { described_class.new(ical_path, year: 2018).serialize }
 
     context "when serializing file correctly" do
       it {

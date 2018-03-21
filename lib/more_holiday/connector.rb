@@ -1,23 +1,47 @@
+require "more_holiday/reader"
+require "more_holiday/cache/file"
+
 module MoreHoliday
   class Connector
-    attr_reader :state, :for_year
+    attr_reader :state, :file_path, :year
 
-    def initialize state, for_year: Date.today.year
+    def initialize state, file_path: nil, year: Date.today.year
       @state = state
-      @for_year = for_year
+      @file_path = file_path
+      @year = year
     end
 
-    def list
-      service.new(state, for_year: for_year).list
+    def holidays
+      @holidays ||=
+        if file_path.nil?
+          connect
+        else
+          Reader.new(file_path, year: year).list
+        end
+    end
+
+    def connect
+      if cache.exist?
+        cache.read
+      else
+        cache.write Reader.new(service::Connect.new(state).get, year: year).list
+        cache.data
+      end
+    end
+
+    def source
+      return "file" unless file_path.nil?
+      service::SOURCE
     end
 
     private
 
     def service
-      case country
-      when :de then nil # placeholder
-      else raise NotProvidedError, "No service for #{country} officals provided."
-      end
+      @service ||=
+        case country
+        when "de" then nil # placeholder
+        else raise NotProvidedError, "No service for #{country} officals provided."
+        end
     end
 
     def state_valid?
@@ -31,7 +55,7 @@ module MoreHoliday
 
     def countries
       @countries ||= {
-        de: [
+        "de" => [
           "Baden-Württemberg",
           "Bavaria",
           "Berlin",
@@ -51,11 +75,15 @@ module MoreHoliday
         ]
       }
     end
-  end
 
-  class NotProvidedError < StandardError
-  end
+    def cache
+      @cache ||= Cache::File.new(file_name: year, folder_path: File.join("holidays", country, state))
+    end
 
-  class InvalidStateError < StandardError
+    class NotProvidedError < StandardError
+    end
+
+    class InvalidStateError < StandardError
+    end
   end
 end

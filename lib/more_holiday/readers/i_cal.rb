@@ -3,12 +3,12 @@ require "icalendar"
 module MoreHoliday
   module Readers
     class ICal
-      attr_reader :path, :for_year, :raw, :serialized
+      attr_reader :path, :year, :raw, :serialized
 
-      def initialize path, for_year: Date.today.year
+      def initialize path, year: Date.today.year
         @path = path
         @raw = File.read(path)
-        @for_year = for_year
+        @year = year
       end
 
       def serialize
@@ -41,19 +41,19 @@ module MoreHoliday
 
         case rules.frequency
         when "YEARLY"
-          year, month, day = event.dtstart.year, event.dtstart.month, event.dtstart.day
+          event_year, month, day = event.dtstart.year, event.dtstart.month, event.dtstart.day
 
           if rules.interval.is_a?(Integer)
-            while year <= for_year
-              add_event(Date.parse("#{year}-#{month}-#{day}"), event.summary)
-              year += rules.interval
+            while event_year <= year
+              add_event(Date.parse("#{event_year}-#{month}-#{day}"), event.summary)
+              event_year += rules.interval
             end
           end
         end
       end
 
       def remove_out_of_scope_events
-        @serialized.reject! { |event| Date.parse(event.first).year != for_year  }
+        @serialized.reject! { |event| Date.parse(event.first).year != year  }
       end
     end
   end
