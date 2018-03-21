@@ -27,18 +27,27 @@ module MoreHoliday
         ::File.exists?(file_path) and still_valid?
       end
 
+      def resolve function
+        if exist?
+          read
+        else
+          write function.call
+          data
+        end
+      end
+
       def clear!
         !!FileUtils.rm_rf(cache_base_path)
+      end
+
+      def file_path
+        ::File.join(folder_path, file_name)
       end
 
       private
 
       def cache_base_path
         ::File.join("tmp", "cache")
-      end
-
-      def file_path
-        ::File.join(folder_path, file_name)
       end
 
       def still_valid?

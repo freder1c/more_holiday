@@ -1,6 +1,8 @@
 require "more_holiday/reader"
 require "more_holiday/cache/file"
 
+require "more_holiday/connectors/ifeiertage/ifeiertage"
+
 module MoreHoliday
   class Connector
     attr_reader :state, :file_path, :year
@@ -21,12 +23,7 @@ module MoreHoliday
     end
 
     def connect
-      if cache.exist?
-        cache.read
-      else
-        cache.write Reader.new(service::Connect.new(state).get, year: year).list
-        cache.data
-      end
+      cache.resolve Proc.new { Reader.new(service::Connect.get(state), year: year).list }
     end
 
     def source

@@ -78,6 +78,29 @@ RSpec.describe MoreHoliday::Cache::File do
     end
   end
 
+  describe "#resolve" do
+    let(:resolve) { described_class.new(file_name: "file", folder_path: "rspec").resolve(Proc.new{test_data}) }
+
+    context "when file doesn't exist" do
+      it "should create file and return data" do
+        expect_any_instance_of(described_class).not_to receive(:read)
+        expect_any_instance_of(described_class).to receive(:write)
+        expect_any_instance_of(described_class).to receive(:data)
+        resolve
+      end
+    end
+
+    context "when file does exist" do
+      it "should read from file and return data" do
+        expect_any_instance_of(described_class).to receive(:read)
+        expect_any_instance_of(described_class).not_to receive(:write)
+        expect_any_instance_of(described_class).not_to receive(:data)
+        File.write(test_file_path, test_data)
+        resolve
+      end
+    end
+  end
+
   describe "#clear!" do
     subject { described_class.new(file_name: "file", folder_path: "rspec").clear! }
 

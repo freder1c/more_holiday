@@ -3,12 +3,6 @@ RSpec.describe MoreHoliday::Connector do
   let(:initialize_without_file) { described_class.new("Berlin") }
   let(:initialize_with_file) { described_class.new("Berlin", file_path: file_path) }
 
-  let(:stub_connect_class) {
-    class MoreHoliday::Connector::Connect
-      def initialize(arg); end
-    end
-  }
-
   describe "#holidays" do
     context "when only state param is given" do
       it "should connect to third party provider" do
@@ -40,12 +34,7 @@ RSpec.describe MoreHoliday::Connector do
 
     context "when data is not cached" do
       it "write data to cache" do
-        allow_any_instance_of(MoreHoliday::Cache::File).to receive(:exist?).and_return(false)
-        allow_any_instance_of(MoreHoliday::Cache::File).to receive(:write).and_return(true)
-        allow_any_instance_of(MoreHoliday::Cache::File).to receive(:data).and_return([])
-        stub_connect_class
-        allow_any_instance_of(described_class::Connect).to receive(:get).and_return(nil)
-        allow_any_instance_of(MoreHoliday::Reader).to receive(:list).and_return(nil)
+        allow_any_instance_of(MoreHoliday::Cache::File).to receive(:resolve).and_return([])
         subject
       end
     end
