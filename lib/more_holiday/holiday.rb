@@ -28,12 +28,12 @@ module MoreHoliday
       }
     end
 
-    def give_me_a_calender_file!
-      export_to_ical
+    def give_me_a_calender_file! path
+      export_ical_file(path)
     end
 
-    def export_to_ical_file
-      export_suggestions.to_file("ical")
+    def export_ical_file path
+      export_suggestions.to_file(path, type: "ical")
     end
 
     private
@@ -47,7 +47,7 @@ module MoreHoliday
     end
 
     def export_suggestions
-      @export_suggestions ||= Export.new(calculator.suggestions)
+      @export_suggestions ||= Exporter.new(calculator.suggestions.map{ |d| [d, "Take a break :)"] })
     end
   end
 end

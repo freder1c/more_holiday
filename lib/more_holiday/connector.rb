@@ -1,4 +1,5 @@
 require "more_holiday/importer"
+require "more_holiday/exporter"
 require "more_holiday/cache/file"
 
 require "more_holiday/connectors/ifeiertage/ifeiertage"
