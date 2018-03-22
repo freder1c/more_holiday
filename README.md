@@ -1,6 +1,10 @@
 # MoreHoliday
 
-TODO
+Make more out of your holidays!
+
+## Description
+
+Use bridging days smartly, to have more value out of your given holiday days. This gem automatically suggests you, which days to reserve next time you ask your employer for vacation.
 
 ## Installation
 
@@ -20,7 +24,33 @@ Or install it yourself as:
 
 ## Usage
 
-TODO
+This libary comes with german official holidays build in! So you just need to select your state and how many days you have available. Then you will get a suggestion, which days you should use, to take advantage from bridging days.
+
+```ruby
+MoreHoliday::Holiday.new("Berlin", available_days: 15).suggestions
+```
+
+Currently only german official holidays are supported. If you want to use select a different state or just want to play custom non official days, you can initialize with an ical file.
+
+```ruby
+MoreHoliday::Holiday.new(nil, available_days: 15, file_path: "/path/to/ical.ics").suggestions
+```
+
+## Export
+
+It is possible to export the suggested days as a ical file as well, so you don't need to add them all manually to your calendar.
+
+```ruby
+MoreHoliday::Holiday.new("Berlin", available_days: 15).export_ical_file("/path/for/export")
+# => "/path/for/export/MoreHoliday.ics"
+```
+
+## Next steps
+
+- Add preference option, that suggestions are focused on specific time ranges
+- Support more country states
+- Add more import and export file content types
+- Add browser support, that libary can be used with a stylish interface
 
 ## Development
 
@@ -30,7 +60,7 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/more_holiday. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
+Bug reports and pull requests are welcome on GitHub at https://github.com/freder1c/more_holiday. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
 
 ## License
 

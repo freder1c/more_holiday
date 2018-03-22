@@ -9,10 +9,10 @@ RSpec.describe MoreHoliday::Holiday do
 
   let(:path) { File.join("tmp", "rspec") }
 
-  describe "#make_more_out_of_may_holidays!" do
+  describe "#make_more_out_of_my_holidays!" do
     it "should call #suggestions" do
       expect_any_instance_of(described_class).to receive(:suggestions)
-      described_class.new("state").make_more_out_of_may_holidays!
+      described_class.new("state").make_more_out_of_my_holidays!
     end
   end
 

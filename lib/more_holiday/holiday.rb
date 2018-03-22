@@ -12,8 +12,7 @@ module MoreHoliday
       @year = year
     end
 
-
-    def make_more_out_of_may_holidays!
+    def make_more_out_of_my_holidays!
       suggestions
     end
 
