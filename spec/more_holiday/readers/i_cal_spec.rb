@@ -2,11 +2,9 @@ RSpec.describe MoreHoliday::Readers::ICal do
   let(:ical_path) { File.join("spec", "fixtures", "reader", "ical.ics") }
 
   describe "#list" do
-    subject { described_class.new(ical_path, year: 2018).serialize }
-
     context "when serializing file correctly" do
-      it {
-        is_expected.to eq([
+      it "should return all events from 2018" do
+        expect(described_class.new(File.read(ical_path), year: 2018).serialize).to eq([
           ["2018-01-01", "Neujahr"],
           ["2018-01-06", "Heilige Drei Könige"],
           ["2018-03-30", "Karfreitag"],
@@ -25,7 +23,11 @@ RSpec.describe MoreHoliday::Readers::ICal do
           ["2018-12-25", "1. Weihnachtsfeiertag"],
           ["2018-12-26", "2. Weihnachtsfeiertag"]
         ])
-      }
+      end
+
+      it "should return no events" do
+        expect(described_class.new(File.read(ical_path), year: 1970).serialize).to eq([])
+      end
     end
   end
 end

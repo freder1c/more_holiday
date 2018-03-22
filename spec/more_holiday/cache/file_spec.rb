@@ -33,14 +33,13 @@ RSpec.describe MoreHoliday::Cache::File do
       it "should read content" do
         FileUtils.mkdir_p(test_path)
         File.write(test_file_path, test_data)
-        is_expected.to eq(test_data)
+        is_expected.to eq(test_data.to_s)
       end
     end
 
     context "when file exist in cache and is not readable" do
       it do
-        FileUtils.mkdir_p(test_path)
-        File.write(test_file_path, "123IOI/)(")
+        allow_any_instance_of(described_class).to receive(:exist?).and_return(true)
         expect{ subject }.to raise_error(described_class::FileCacheReadError)
       end
     end
@@ -101,8 +100,8 @@ RSpec.describe MoreHoliday::Cache::File do
     end
   end
 
-  describe "#clear!" do
-    subject { described_class.new(file_name: "file", folder_path: "rspec").clear! }
+  describe ".clear!" do
+    subject { described_class.clear! }
 
     context "when cache contains files and get successfully removed" do
       before(:each) { File.write(test_file_path, test_data) }

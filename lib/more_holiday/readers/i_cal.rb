@@ -3,11 +3,10 @@ require "icalendar"
 module MoreHoliday
   module Readers
     class ICal
-      attr_reader :path, :year, :raw, :serialized
+      attr_reader :year, :content, :serialized
 
-      def initialize path, year: Date.today.year
-        @path = path
-        @raw = File.read(path)
+      def initialize content, year: Date.today.year
+        @content = content
         @year = year
       end
 
@@ -20,7 +19,7 @@ module MoreHoliday
       private
 
       def extract_events
-        Icalendar::Calendar.parse(raw).map do |calendar|
+        Icalendar::Calendar.parse(content).map do |calendar|
           calendar.events.map do |event|
             if !event.rrule.first.nil?
               complete_frequent(event)

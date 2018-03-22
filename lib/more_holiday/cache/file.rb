@@ -10,10 +10,14 @@ module MoreHoliday
         @folder_path = ::File.join(cache_base_path, folder_path)
       end
 
+      def file_path
+        ::File.join(folder_path, file_name)
+      end
+
       def read
         return nil if !exist? or !still_valid?
-        eval ::File.read(file_path)
-      rescue SyntaxError
+        ::File.read(file_path)
+      rescue
         raise FileCacheReadError, "An error occurred while reading from file cache."
       end
 
@@ -36,12 +40,8 @@ module MoreHoliday
         end
       end
 
-      def clear!
-        !!FileUtils.rm_rf(cache_base_path)
-      end
-
-      def file_path
-        ::File.join(folder_path, file_name)
+      def self.clear!
+        !!FileUtils.rm_rf(::File.join("tmp", "cache"))
       end
 
       private

@@ -2,15 +2,20 @@ require "more_holiday/readers/i_cal"
 
 module MoreHoliday
   class Reader
-    attr_reader :path, :year, :content
+    attr_reader :path, :stream, :year, :content
 
-    def initialize path, year: Date.today.year
-      @path = path
+    def initialize year = Date.today.year
       @year = year
     end
 
-    def list
+    def from_file path
+      @path = path
       @content = read_file
+    end
+
+    def from_stream stream
+      @stream = stream
+      @contect = read_stream
     end
 
     private
@@ -18,12 +23,23 @@ module MoreHoliday
     def read_file
       File.open(path, "r") do |file|
         case File.extname(file).delete(".")
-        when "ics" then Readers::ICal.new(file, year: year).serialize
+        when "ics" then Readers::ICal.new(File.read(file), year: year).serialize
         else
           file.close
           raise LoadError, "Type of file is not supported."
         end
       end
+    end
+
+    def read_stream
+      case true
+      when stream.start_with?("BEGIN:VCALENDAR")
+        Readers::ICal.new(stream, year: year).serialize
+      else raise StreamContentTypeError, "Could not detect content type of stream"
+      end
+    end
+
+    class StreamContentTypeError < StandardError
     end
   end
 end

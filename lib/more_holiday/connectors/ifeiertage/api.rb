@@ -9,7 +9,7 @@ module MoreHoliday
       def get state
         @state = state
         response = Net::HTTP.get_response(URI(url))
-        raise ConnectionError, "Can't connect to www.ifeiertage.de" unless response.is_a?(Net::HTTPSuccess)
+        raise ConnectionError, "Can't connect to #{SOURCE}" unless response.is_a?(Net::HTTPSuccess)
         response.body
       end
 

@@ -18,12 +18,12 @@ module MoreHoliday
         if file_path.nil?
           connect
         else
-          Reader.new(file_path, year: year).list
+          Reader.new(year).from_file(file_path)
         end
     end
 
     def connect
-      cache.resolve Proc.new { Reader.new(service::Connect.get(state), year: year).list }
+      eval(cache.resolve Proc.new { Reader.new(year).from_stream(service::Connect.get(state)).to_s })
     end
 
     def source
@@ -36,7 +36,7 @@ module MoreHoliday
     def service
       @service ||=
         case country
-        when "de" then nil # placeholder
+        when "de" then Ifeiertage
         else raise NotProvidedError, "No service for #{country} officals provided."
         end
     end
@@ -74,7 +74,7 @@ module MoreHoliday
     end
 
     def cache
-      @cache ||= Cache::File.new(file_name: year, folder_path: File.join("holidays", country, state))
+      @cache ||= Cache::File.new(file_name: year.to_s, folder_path: File.join("holidays", country, state))
     end
 
     class NotProvidedError < StandardError

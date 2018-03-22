@@ -4,7 +4,7 @@ module MoreHoliday
   class Holiday
     attr_reader :state, :available_days, :file_path, :year
 
-    def initialize state:, available_days: 0, file_path: nil, year: Date.today.year
+    def initialize state, available_days: 0, file_path: nil, year: Date.today.year
       @state = state
       @available_days = available_days
       @file_path = file_path
@@ -25,7 +25,7 @@ module MoreHoliday
     private
 
     def connector
-      @connector ||= Connector.new(state: state, file_path: file_path, year: year)
+      @connector ||= Connector.new(state, file_path: file_path, year: year)
     end
   end
 end

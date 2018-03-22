@@ -7,7 +7,7 @@ RSpec.describe MoreHoliday::Connector do
     context "when only state param is given" do
       it "should connect to third party provider" do
         expect_any_instance_of(described_class).to receive(:connect)
-        expect_any_instance_of(MoreHoliday::Reader).not_to receive(:list)
+        expect_any_instance_of(MoreHoliday::Reader).not_to receive(:from_stream)
         initialize_without_file.holidays
       end
     end
@@ -15,7 +15,7 @@ RSpec.describe MoreHoliday::Connector do
     context "when file path param is given" do
       it "should connect to file reader" do
         expect_any_instance_of(described_class).not_to receive(:connect)
-        expect_any_instance_of(MoreHoliday::Reader).to receive(:list)
+        expect_any_instance_of(MoreHoliday::Reader).to receive(:from_file)
         initialize_with_file.holidays
       end
     end
@@ -27,14 +27,14 @@ RSpec.describe MoreHoliday::Connector do
     context "when data is already cached" do
       it "read data from cache" do
         allow_any_instance_of(MoreHoliday::Cache::File).to receive(:exist?).and_return(true)
-        allow_any_instance_of(MoreHoliday::Cache::File).to receive(:read).and_return([])
+        allow_any_instance_of(MoreHoliday::Cache::File).to receive(:read).and_return("[]")
         subject
       end
     end
 
     context "when data is not cached" do
       it "write data to cache" do
-        allow_any_instance_of(MoreHoliday::Cache::File).to receive(:resolve).and_return([])
+        allow_any_instance_of(MoreHoliday::Cache::File).to receive(:resolve).and_return("[]")
         subject
       end
     end
@@ -49,9 +49,8 @@ RSpec.describe MoreHoliday::Connector do
 
     context "when only state param is given" do
       it "should return service source" do
-        allow_any_instance_of(described_class).to receive(:country).and_return("de")
-        stub_const("#{described_class}::SOURCE", "connector_source")
-        expect(initialize_without_file.source).to eq("connector_source")
+        described_class.new("Berlin")
+        expect(initialize_without_file.source).to eq("http://www.ifeiertage.de")
       end
     end
 
