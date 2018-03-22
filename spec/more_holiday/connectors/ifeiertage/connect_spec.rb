@@ -13,7 +13,9 @@ RSpec.describe MoreHoliday::Ifeiertage::Connect do
         to_return(status: 200, body: response_body, headers: {})
       end
 
-      it { is_expected.to eq(response_body) }
+      it "should respond with ical data" do
+        is_expected.to eq(response_body)
+      end
     end
   end
 end

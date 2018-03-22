@@ -43,7 +43,7 @@ module MoreHoliday
           event_year, month, day = event.dtstart.year, event.dtstart.month, event.dtstart.day
 
           if rules.interval.is_a?(Integer)
-            while event_year <= year
+            while event_year <= year or event_year <= event.dtstamp.year
               add_event(Date.parse("#{event_year}-#{month}-#{day}"), event.summary)
               event_year += rules.interval
             end
