@@ -1,4 +1,4 @@
-require "more_holiday/reader"
+require "more_holiday/importer"
 require "more_holiday/cache/file"
 
 require "more_holiday/connectors/ifeiertage/ifeiertage"
@@ -18,12 +18,8 @@ module MoreHoliday
         if file_path.nil?
           connect
         else
-          Reader.new(year).from_file(file_path)
+          Importer.new(year).from_file(file_path)
         end
-    end
-
-    def connect
-      eval(cache.resolve Proc.new { Reader.new(year).from_stream(service::Connect.get(state)).to_s })
     end
 
     def source
@@ -39,6 +35,10 @@ module MoreHoliday
         when "de" then Ifeiertage
         else raise NotProvidedError, "No service for #{country} officals provided."
         end
+    end
+
+    def connect
+      eval(cache.resolve Proc.new { Importer.new(year).from_stream(service::Connect.get(state)).to_s })
     end
 
     def state_valid?

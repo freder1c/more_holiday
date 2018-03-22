@@ -1,7 +1,7 @@
 require "icalendar"
 
 module MoreHoliday
-  module Readers
+  module Importers
     class ICal
       attr_reader :year, :content, :serialized
 

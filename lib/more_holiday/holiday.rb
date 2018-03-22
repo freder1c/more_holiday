@@ -28,6 +28,14 @@ module MoreHoliday
       }
     end
 
+    def give_me_a_calender_file!
+      export_to_ical
+    end
+
+    def export_to_ical_file
+      export_suggestions.to_file("ical")
+    end
+
     private
 
     def connector
@@ -36,6 +44,10 @@ module MoreHoliday
 
     def calculator
       @calculator ||= Calculator.new(connector.holidays, available_days)
+    end
+
+    def export_suggestions
+      @export_suggestions ||= Export.new(calculator.suggestions)
     end
   end
 end

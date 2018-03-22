@@ -1,4 +1,4 @@
-RSpec.describe MoreHoliday::Reader do
+RSpec.describe MoreHoliday::Importer do
   let(:ical_path) { File.join("spec", "fixtures", "reader", "ical.ics") }
   let(:bin_path) { File.join("spec", "fixtures", "reader", "bin") }
 

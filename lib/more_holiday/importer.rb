@@ -1,7 +1,7 @@
-require "more_holiday/readers/i_cal"
+require "more_holiday/importers/i_cal"
 
 module MoreHoliday
-  class Reader
+  class Importer
     attr_reader :path, :stream, :year, :content
 
     def initialize year = Date.today.year
@@ -23,7 +23,7 @@ module MoreHoliday
     def read_file
       File.open(path, "r") do |file|
         case File.extname(file).delete(".")
-        when "ics" then Readers::ICal.new(File.read(file), year: year).serialize
+        when "ics" then Importers::ICal.new(File.read(file), year: year).serialize
         else
           file.close
           raise LoadError, "Type of file is not supported."
@@ -34,7 +34,7 @@ module MoreHoliday
     def read_stream
       case true
       when stream.start_with?("BEGIN:VCALENDAR")
-        Readers::ICal.new(stream, year: year).serialize
+        Importers::ICal.new(stream, year: year).serialize
       else raise StreamContentTypeError, "Could not detect content type of stream"
       end
     end
