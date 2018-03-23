@@ -16,3 +16,6 @@
 
 # OS Artifacts
 .DS_Store
+
+# Gem builds
+*.gem
